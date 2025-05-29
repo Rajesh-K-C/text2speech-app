@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QSizePolicy,
 )
 from PyQt6.QtCore import Qt
+import pyttsx3
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -21,16 +22,15 @@ class MainWindow(QMainWindow):
         self.play_button = None
         self.setWindowTitle("Text To Speech App")
         self.setFixedSize(600, 300)
+        self.engine = pyttsx3.init()
         self.init_ui()
 
     def init_ui(self):
         # Voice selection
         voice_label = QLabel("Voice:")
-        self.voice_combo = QComboBox()
-        self.voice_combo.addItems(["Voice 1", "Voice 2", "Voice 3"])
-
         voice_label.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        self.voice_combo.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+
+        self.setup_combo_box()
 
         # Voice section layout
         voice_layout = QHBoxLayout()
@@ -58,6 +58,14 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(container)
 
+    def setup_combo_box(self):
+        self.voice_combo = QComboBox()
+        voices = self.engine.getProperty('voices')
+
+        for index, voice in enumerate(voices):
+            self.voice_combo.addItem(voice.name)
+
+        self.voice_combo.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
 def main():
     app = QApplication(sys.argv)
