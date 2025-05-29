@@ -1,0 +1,9 @@
+[project]
+name = "text2speech-app"
+version = "0.1.0"
+description = "Text-to-Speech GUI is a simple desktop application that converts written text into spoken words using a user-friendly graphical interface."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pyqt6>=6.9.0",
+]
