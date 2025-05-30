@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Text To Speech App")
         self.setFixedSize(600, 300)
         self.engine = pyttsx3.init()
+        self.voices = None
         self.init_ui()
 
     def init_ui(self):
@@ -46,6 +47,7 @@ class MainWindow(QMainWindow):
         # Play button
         self.play_button = QPushButton("Play")
         self.play_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.play_button.clicked.connect(self.play)
 
         # Layout
         layout = QVBoxLayout()
@@ -60,12 +62,21 @@ class MainWindow(QMainWindow):
 
     def setup_combo_box(self):
         self.voice_combo = QComboBox()
-        voices = self.engine.getProperty('voices')
+        self.voices = self.engine.getProperty('voices')
 
-        for index, voice in enumerate(voices):
+        for index, voice in enumerate(self.voices):
             self.voice_combo.addItem(voice.name)
 
         self.voice_combo.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.voice_combo.currentIndexChanged.connect(self.set_voice)
+
+    def set_voice(self, index):
+        self.engine.setProperty('voice', self.voices[index].id)
+
+    def play(self):
+        text = self.text_edit.toPlainText()
+        self.engine.say(text)
+        self.engine.runAndWait()
 
 def main():
     app = QApplication(sys.argv)
