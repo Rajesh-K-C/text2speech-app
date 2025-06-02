@@ -75,8 +75,14 @@ class MainWindow(QMainWindow):
 
     def play(self):
         text = self.text_edit.toPlainText()
+        self.engine.connect('finished-utterance', self.onEnd)
         self.engine.say(text)
+        self.play_button.setEnabled(False)
         self.engine.runAndWait()
+
+    def onEnd(self, name, completed):
+        if completed:
+            self.play_button.setEnabled(True)
 
 def main():
     app = QApplication(sys.argv)
